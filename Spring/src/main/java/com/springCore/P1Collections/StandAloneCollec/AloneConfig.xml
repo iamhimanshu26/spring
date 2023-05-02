@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Here when we used collections to inject the value like List, Set etc, 
+		we have manually specified it within the property tag which means we can 
+		not used them outside of the tag. So to use them outside, we can use stand-alone 
+		collection where we will declare the collection before the meta-data like 
+		declaring the class, name of class or the values for them and then can use 
+		them anywhere. To create the Stand-alone list, we need to add one more bean 
+		of util and its schemaLocation in the config file above. Bean - xmlns:util="http://www.springframework.org/schema/util" 
+		schemaLocation - http://www.springframework.org/schema/util http://www.springframework.org/schema/utit/spring-utit.xsd 
+		Now after this, we can add standAlone collections with util tag. -->
+
+	<!-- StandAlone List -->
+	<util:list list-class="java.util.LinkedList"
+		id="listOfFriends">
+		<value>Sujit</value>
+		<value>Raman</value>
+		<value>Vikas</value>
+		<value>Rohan</value>
+	</util:list>
+
+	<!-- StandAlone Map -->
+	<util:map map-class="java.util.HashMap" id="courses">
+		<entry key="Spring Framework" value="10000" />
+		<entry key="Django Framework" value="8000" />
+		<entry key="Application Framework" value="6000" />
+		<entry key="Web Framework" value="4000" />
+	</util:map>
+
+	<!-- StandAlone Properties -->
+	<!-- Properties is actually a class not an Interface so we don't need to 
+		define its implementation, only Id wil do here -->
+	<util:properties id="dbconfig">
+		<prop key="driver">com.mysql.jdbc.driver</prop>
+		<prop key="username">iamhimanshu</prop>
+		<prop key="password">mypassoword</prop>
+		<prop key="url">mysql:jdbc://localhost:8808/database</prop>
+	</util:properties>
+
+	<bean class="com.springCore.P1Collections.StandAloneCollec.Person"
+		name="person1">
+		<property name="friends" ref="listOfFriends" />  <!-- ID of StandAlone List -->
+		<property name="feeStruc" ref="courses" />  <!-- ID of StandAlone Map -->
+		<property name="props" ref="dbconfig" /> 
+	</bean>
+
+</beans>
+

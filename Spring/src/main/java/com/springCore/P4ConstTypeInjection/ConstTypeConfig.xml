@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- By using constructo-arg tag -->
+	<!-- <bean class="com.springCore.P4ConstTypeInjection.Person" name= "Aditya">
+	<constructor-arg value="Aditya"/>
+	<constructor-arg value= "12" type="int"/>
+	</bean> -->
+	
+	<!-- It means Ioc will call the constructor which has one string first and then an integer parameter
+	To resolve the ambiguity , we need to specify the type here otherwise Ioc will confuse it with the other const
+	with 2 strings parameters. -->
+	
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
+	<!-- By using ref object
+	<bean class= "com.springCore.P4ConstTypeInjection.Certificate" name="Certi">
+	<constructor-arg value="Cloud Certificate"/>
+	</bean>
+	
+	<bean class="com.springCore.P4ConstTypeInjection.Person" name= "Himanshu">
+	<constructor-arg value="Himanshu"/>
+	<constructor-arg value= "12" type="int"/>
+	<constructor-arg ref="Certi"/>
+	</bean>
+	 -->
+
+   <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->	
+	
+	<!-- Using element tag
+	<bean class= "com.springCore.P4ConstTypeInjection.Certificate" name="Certi">
+	<constructor-arg>
+		<value> Java is a good programming language </value>
+	</constructor-arg>
+	</bean>
+	 -->
+	 
+	 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	 
+	<!-- Using C-schema 
+	 --> 
+	 	 <bean class= "com.springCore.P4ConstTypeInjection.Certificate" name="Certi" c:name= "Spring Framework"/>
+    <bean class="com.springCore.P4ConstTypeInjection.Person" name= "person">
+	<constructor-arg value="Himanshu"/>
+	<constructor-arg value= "12" type="int"/>
+	<constructor-arg ref="Certi"/>
+	</bean>
+	 
+	 <!-- Using C schema in everytag and and using a List collection
+	 	 	  <bean class= "com.springCore.P4ConstTypeInjection.Certificate" name="Certi" c:name= "Spring Framework"/>
+	    <bean class="com.springCore.P4ConstTypeInjection.Person" name= "person" c:name="Himanshu" c:personId="26"
+	    c:certi-ref="Certi">
+	    	</bean>
+	   -->
+
+
+
+</beans>
+

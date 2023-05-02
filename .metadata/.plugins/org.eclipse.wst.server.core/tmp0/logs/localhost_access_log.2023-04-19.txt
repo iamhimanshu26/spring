@@ -1,0 +1,7 @@
+127.0.0.1 - - [19/Apr/2023:10:25:58 +0530] "GET / HTTP/1.1" 404 751
+0:0:0:0:0:0:0:1 - - [19/Apr/2023:10:25:59 +0530] "GET /SprMvcSearch/ HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [19/Apr/2023:10:26:00 +0530] "GET /SprMvcSearch/home HTTP/1.1" 200 1966
+0:0:0:0:0:0:0:1 - - [19/Apr/2023:10:26:00 +0530] "GET /SprMvcSearch/resources/js/script.js HTTP/1.1" 200 34
+0:0:0:0:0:0:0:1 - - [19/Apr/2023:10:26:01 +0530] "GET /SprMvcSearch/resources/images/mypic.jpg HTTP/1.1" 200 5024435
+0:0:0:0:0:0:0:1 - - [19/Apr/2023:10:27:05 +0530] "GET /SprMvcSearch/form HTTP/1.1" 200 4530
+0:0:0:0:0:0:0:1 - - [19/Apr/2023:10:28:59 +0530] "POST /SprMvcSearch/handleForm HTTP/1.1" 200 312

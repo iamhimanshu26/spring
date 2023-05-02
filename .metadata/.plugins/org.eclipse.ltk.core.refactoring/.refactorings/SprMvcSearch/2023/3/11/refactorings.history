@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;SprMvcSearch/src/main/webapp/WEB-INF/resources/images/IMG20211201224617.jpg&apos; to &apos;mypic.jpg&apos;" description="Rename resource &apos;IMG20211201224617.jpg&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/WEB-INF/resources/images/IMG20211201224617.jpg" name="mypic.jpg" stamp="1679134745519" updateReferences="true"/>
+</session>

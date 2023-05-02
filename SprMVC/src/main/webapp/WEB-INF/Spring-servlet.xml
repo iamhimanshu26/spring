@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+    <!-- Annotation tag to enable the transaction -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>  
+    
+    <!-- To enable the annotation -->
+	<context:component-scan base-package="springmvc" />
+    
+    	<!-- Configuring the viewResolver with the help of bean tag class name can 
+		be found with ctrl+shift+t and search InternalResourceViewResolver -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		name="viewResolver">
+
+		<!-- This prefix property defines how the pages will start from the front. -->
+		<property name="prefix" value="/WEB-INF/views/" />
+
+		<!-- This suffix property of viewResolver defines how the page will end -->
+		<property name="suffix" value=".jsp" />
+
+		<!-- Example - /WEB-INF/views/hello.jsp , where hello is the name of the 
+			view and will be given to us by Controller with step 4. -->
+	</bean>
+	
+	
+	 <!-- Bean class of HibernateTemplate which uses LocalSessionFactoryBean object -->
+	 <bean class="org.springframework.orm.hibernate5.HibernateTemplate" name="hiberTemp" p:sessionFactory-ref="factory"/>
+	 
+	 <!-- Bean class of LocalSessionFactoryBean. This bean uses three properties to work - datasource obj, Hibernate properties
+	and annotated classes if more than one is present --> 
+	     
+	 <bean class=" org.springframework.orm.hibernate5.LocalSessionFactoryBean" name="factory">
+	 <property name="dataSource" ref="dataSource"></property>    <!-- 1. Datasource Object -->
+	 <property name="hibernateProperties">                       <!-- 2. Hibernate Properties -->
+	 <props>
+	 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
+	 <prop key="hibernate.show_sql">true</prop>
+	 <prop key="hibernate.hbm2ddl.auto">update</prop>    <!-- To create the table once -->
+	 </props>
+	 </property>
+	 <property name="annotatedClasses">                          <!-- 3. Annotated classes -->
+	 <list>
+	 <value>
+	        springmvc.Model.User
+	 </value>
+	 </list>
+	 </property>
+	 </bean> 
+	 
+	 <!-- Bean class of DataSource -->
+  	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="dataSource" 
+	      p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/springjdbc"
+	      p:username="root" p:password="root"/> 
+	      
+	   <!-- Bean class of TransactionManager so that we can write into the db directly from the program -->
+     <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" name="transactionManager" p:sessionFactory-ref="factory"/>
+	      
+</beans>

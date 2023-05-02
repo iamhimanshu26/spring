@@ -1,0 +1,245 @@
+ Spring MVC -
+
+ - A spring mvc is sub framework of spring framework which is used to build a web applications.
+ - It is build on the top of Servlet API.
+ - It follows the Model-View-Controller design pattern which can not be done using Servet APIs.
+ - It implements all the basic features of a core spring framework like Inversion of Control, Dependency injection.
+ 
+ Why do we need Spring MVC ?
+ 
+ a. Seperate each role model(Data) , view(Frontend layer) and controller(controls the flow of application).
+ b. Provides powerful configurations.
+ c. Provide flexibility by either adding or extracting any modules whenever we needed in the project.
+ d. Loosely Coupled code since most of the things will be handled by Ioc container.
+ e. Rapid Application Developement after creating config file once.
+ 
+ MVC design Pattern-
+ 
+ It is basically a standard pattern to remember while creating the application means how do we need to organize our code.
+ - Model- Data / Data Layer where all the bussiness logic would be note down.
+ - View- Presents UI to the users.
+ - Controller - Interface b/w model and view and it controls the flow of applications.
+ 
+ Working of Spring MVC--------------
+ 
+ 1. Firstly it is completely based on client-server architecture means there will be a client and a server to recieve
+    its request like Tomcat Server.
+    
+ 2. The server can have numbers of modules like spring-mvc to handle the request.
+ 
+ 3. When client sends the request to the server , the Front-Controller would be the one who will only recieve/accept the 
+    request first. And with the help of HandlerMapping , it will transfer/delegate the request to the main controller.
+    
+ 4. Now the controller will handle the request with the help of other layers like Data Layer/DAO , Bussiness Layer, etc
+    based on the requirements the request is proposing.
+    
+ 5. Then after handling the request with the help , it will finally return/renders the response to the Front-Controller consisting
+    the Model/Data . And it will also give the name of the View(Means UI pages) to the front-controller.  
+    
+ 6. Now the front-controller has two things with it- The Data/Model and nameOf view. Now with the help of viewResolver,
+    it will again render the response to the viewTemplate with the help of its recieved model.
+    
+ 7. Finally the viewTemplate will return the final response to the frontController again. Then the frontcontroller will
+    send that frontEnd page or response to the client which can be in form of HTML pages.
+    
+ 8. Front-controller is basically a DispatcherServlet.
+ 
+ 9. Model means the objects that holds the data.        
+    
+    
+  Setup of the mvc maven-projects-------------------------------
+  
+  1. First We need to select the artifact ID as maven-archetype-webapp since it is gonna use to create a web application. 
+   
+  2. Secondly we will get the error at first since we didn't add our tomcat-server library, so to do so we will go the project
+     build path --> configure build path --> libraries --> add library --> runtime server --> select apache tomcat server 
+     and then apply and close the tab.
+     
+ ****** Steps to configure the spring mvc *******
+  
+  a. Configure the dispatcher servlet/frontcontroller in web.xml . It means declaring the servlet class and mapping it.
+  
+  b. Create spring configuration file where we will declare all our beans.
+  
+  c. Configure view Resolver which is simply a bean that needs to be declared in spring configuration file(xml) and 
+     setting its prefix and suffix property for the request.
+     
+  d. Create controller class which will accept all the requests by simply using the @Controller annotation . And here in 
+     this class, we will write all our methods to handle the urls. And we need to enable the annotation configuration
+     from the servlet.xml file.
+  
+  e. Create a view to show(page) means (.jsp) where we will write down about the frontend the client would see when they
+     hit the url from their end.
+  
+  
+  Sending the dynamic data from controller to view----
+  
+  - We can do this with the help of Model and ModelAndView objects which will contain all the data supposed to be display 
+    on the UI.
+    
+  - While using Model object- we will use addAttribute(String Key, Object Value) method to send the data, meanwhile if we
+    use ModelAndView , we will use addObject(String Key, Object Value) method.
+    
+  - These methods will be used in the controller where all the related methods are used. By using add methods to add the data
+    of these objects , we need to get the data data from the jsp pages by using get.
+    
+  - In case of Model, Simply Model type object will pass as the parameter to the methods which will return some String value
+    that will work as a suffix for the viewResolver but whereas in ModelAndView case, the return type should be of 
+    ModelAndView , means the methods should return the object of ModelAndView .
+    
+    
+  - Example with Model: 
+  
+    @RequestMapping("/home")
+	public String home(Model model) {
+		model.addAttribute("name", "Himanshu Sharma");
+		model.addAttribute("Id", 26);
+		
+		// passing the collection value
+		List<String> friends= new ArrayList<String>();
+		friends.add("Raman Singh");
+		friends.add("Sujit Kumat");
+		friends.add("Varun Gupta");
+		friends.add("Mani Sharma");
+		friends.add("Vikas Shukla");
+		
+		model.addAttribute("f", friends);
+		
+		System.out.println("This is hit by home url");
+		return "index";
+	}
+	         
+  - Example with ModelAndView: 
+    @RequestMapping("/help")
+    public ModelAndView help(){
+       System.out.println("This is Help Page section");
+       ModelAndView MVObj= new ModelAndView();
+       MVObj.addObject("Contact", "9659163782");
+       MVObj.setViewName("help");
+       return MVObj;
+    }
+    
+    
+ *** How to get Dynamic data program Controller without using request.getAttribute() method in view jsp pages ***
+  
+  a. First we need to add page directory <%page isELIgnored= "false" %> tag to enable the expression language.
+  
+  b. Now we don't need initialize the dynamic data. So don't need to write {String contact = (String) request.getAttribute("Contact");}
+     Simply used expression language to get the data.
+     Exampe - ${contact}
+     
+  c. To print out the collection value without using getAttribute in jsp page, we need to use JSTL. But first of all,
+     we need to add its dependency. To use this jstl in help page, we need to use another tag called taglib.
+     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/fmt" %>   
+   
+   
+  --- Sending the dynamic data from View to Controller/Backend --- 
+  
+  ** Using HTML Form through JSP -
+  
+     @RequestMapping("/home) - This annotations helps us to mapped the passed url(/home) to the method written below the 
+                               annotation and called Handler Method.
+                               We can map the url to the entire class as well. It can also helps us to defined the type of 
+                               request the handler method is having like POST, GET, DELETE etc.
+                               
+                               
+  -> First of all, for creating HTML form page , we will use BootStrap . 
+     Bootstrap 4 is a newer version of Bootstrap, which is the most popular HTML, CSS, and JavaScript framework for developing 
+     responsive, mobile-first websites. In which we will simply use it starter template to create the form. And then
+     simply put all the html code from the site itself like Email , UserName, Password, Submit Button etc.
+                             
+                               
+  -> After writing all the neccessary code in the jsp viewPage, we need to write its relative(without /) URL name and its type so that can be send to 
+     the controller to store the data. This can be done at the starting of the code
+     
+					<form action="processform" method="post">
+			           <!-- All the neccessary code -->
+		    	     </form>                             
+                               
+  -> Now the controller should have the handler method with the same url as provided in the form tag.
+  
+                    @RequestMapping(path= "/processform", method = RequestMethod.POST)
+	                 public String handleForm(HttpServletRequest request) {
+		             return " ";
+	                 }                    
+	                
+  -> Now this request object is responsible for storing the data provided by the form. Therefore , we can use the 
+       getParameter(fieldName) method to get the details. This field name could be email, username, password .
+     But this was the older way to fetch the data from frontend to backend. The new and better way is to use
+     @RequestParam("parameter") annotation.
+     
+  -> This annotation will map/bind the fields present in the form to the parameter passed in the processform() handler 
+     method. Now after storing the data to the passed parameter, we can return the view(success.jsp) to show the user 
+     that theirs details have been stored successfully. 
+     
+  -> Now to show the data on jsp , we need to use Model object to pass the data from controller to view.   
+     We need to use <%page isELIgnored= "false" %> tag to enable the expression language in success.jsp file.
+        	                
+	     <body>
+			<h1>Welcome , ${name}</h1>
+			<h1>Your email is ${email}</h1>
+			<h1>Your password is ${pw} try to secure it</h1>
+         </body>     
+         
+  -> Parameters using this @RequestParam are required by default are true, but we can specify that para is optional by setting
+     attribute required= false.
+     Example -  	public String handleForm( @RequestParam("UserEmail") String email,  Model model){
+                    }
+                    
+   Using Entity Class-                   
+     - For using this anno as parameter, we'll need the entity class(User in this case) first which will store the data of the fields 
+       present in the forms like - UserEmail, UserName and UserPassword.                                   
+   
+   ** @ModelAttribute annotation- 
+     We can do the above things with the help of this anno , by simply passing it same as parameter or by using it 
+     directly on method. 
+     
+     Example 1: Passing it as Parameter -
+     
+     	public String handleForm(@ModelAttribute User user, Model model) {
+		return "success";
+	    }                          
+        
+     With the help of this annotation, all the codes written in above methods has been reduced to two lines. That's the
+     advantage of this anno.    
+     
+     Example 2: Using it directly on method-
+                We can use @ModelAttribute annotation directly when we want to set some property on all of our view/jsp pages                      
+                This method will run before any other handler methods.               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+                               
+     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

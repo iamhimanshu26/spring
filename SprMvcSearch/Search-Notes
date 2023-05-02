@@ -1,0 +1,174 @@
+Notes of Search Application using Mvc-
+
+ Steps-
+ a. First we need to add the dependencies like spring-mvc and jstl.
+ 
+ b. Next step is same as the previous projects of SprMVC, we need to create our servlet/frontcontroller in this project
+    as well in WEB_INF -> web.xml. 
+    
+ c. Next will create spring configuration file(Spring-servlet.xml) where we will declare all our beans for view and for our
+    base package and the base package will be different this time.
+    
+    <!-- To enable the annotation -->
+	<context:component-scan base-package="springmvcsearch" />
+	
+ d. Next we need to use the same approcah we had used in SprMVC for creating the form using Bootstrap 4.
+ 
+ e. After done with all the styling of form, we need to defined its action name , means which url will hit once the
+    data is collected in form. 
+    We are using <forms action= "search" > , this indicates that the search url will hit once the user enter the keyword 
+    and click on the search button.
+    
+ f. Now the last thing is to create a handler method which will handle the search url. It is responsible for fetching the 
+    form data and storing it into a query. We can retreive this query data by using @requestparam annotation.
+    This query will store all the data of the form name querybox.
+    
+    @RequestMapping(path="/search")
+	public RedirectView search(@RequestParam("querybox") String query) {
+		String url="https://www.google.com/search?q="+ query;
+		RedirectView redirectView = new RedirectView();
+		
+		if(query.isEmpty()) {
+			System.out.println("You haven't enter anythings, please enter the keyword.");
+			redirectView.setUrl("home");
+			return redirectView;
+		}
+		
+		redirectView.setUrl(url);
+		return redirectView;
+	}
+    
+   
+  ** How to create and handle complex form-
+           
+     It is pretty much similar to the form we had already created , it just has some other fileds like DOB , 
+     select courses etc. After creating the complex_form.jsp which contains all the boostrap code required to create
+     the form with some form action name which will be hit once the users enters his/her data from the url.
+     
+     All steps are similar to the form we had created before like -
+     
+     1. First we need a jsp file with bootstrap code.
+     
+     2. Secondly we need to write down the action name of the form like <form action="handleForm" method="post">
+        where we can also specify its method type.
+        
+     3. Then the next thing is to create a handler method with the same action name to store the user entered data.
+     
+     4. This method will responsible for storing the data with the help of @RequestParam anno and @ModelAttribute anno.
+     
+     5. But the best way to get the user data is using @ModelAttribute , which will save the user details in an entity 
+        class(Student) with the same name fields that has to be entered while submitting the form.
+        Ex-
+        @RequestMapping(path="/handleForm", method=RequestMethod.POST)
+	    public String formHandler(@ModelAttribute("Student") Student student) {
+		System.out.println("handleFrom url is hit with formHandler().");
+		System.out.println(student);
+		return "success";
+        
+     6. This annotation will store the details in user entity class which can be fetched easily whenever required.
+     
+     
+   ** How to add customs fields in the form-
+               Let's say we have a Student class which will store all the data related to the options present in the form.
+        We are able to do this with @ModelAttribute which is automatically binds our form fields with the class properties
+        But let's say we have one more class property which consists some more property within it and it isn't present in
+        the form. Example- address of Student class which consist props like State & City.   
+        
+     Steps to handle this kind of forms :
+     
+     -> First of all , we need to create a seperate class of the custom property like address which contains its own 2 props.
+     
+     -> Now we need to create fields like state & city in our form itself(complex_form.jsp).
+     
+     -> After creating the fields in form, all we need is to bind the fields with the address property so that it can store its
+        data.
+        							<div class="card">
+									<div class="card-body">
+										<p>Address</p>
+										<div class="form-group">
+											<input  name="address.city" type="text" class="form-control"
+												placeholder="Enter city" />
+										</div>
+
+										<div class="form-group">
+											<input name="address.state" type="text" class="form-control"
+												placeholder="Enter state" />
+										</div>
+									</div>
+								</div>
+							
+	** BindingResult object - This class or its object is basically helps the user for the validation process. Means 
+	                          this will help the user to check if the entered input for any field is correct or not.
+	                         
+	   - We just need it to define in the same handler method which stores the student data. 
+	   public String formHandler(@ModelAttribute("Student") Student student, BindingResult result) {
+	   
+	   }
+	   
+	   - This will tell us which kind of error the user has created while entering the details. For this , we first 
+	   need to add the form tag library in our complex_form :
+	   
+	   <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+	   
+	   - After adding all these , all we need is to provide an alert once the user submitted the form. This alert can be
+	     shown at anywhere on the page like below the Complex Form heading in complex_form.jsp .
+	     
+	                    <div class="alert alert-danger" role="alert">This is a danger
+						alert—check it out!
+						<form:errors path="student.*" />
+						</div>
+						
+    ** Serving static files - 
+    
+       This means adding the other resources like CSS, JS and even images to our files/Forms. The easiest way to do this
+       is by using XML file.
+       
+       Steps- 
+       : First create a seperate(resources) folder in WEB-INF which will contains all our resources related to the form.
+       
+       : In this folder , we can create diff-2 files for diff-2 resources like css , js or images. We can css pages to 
+         css folder, js pages to js folder or even can add images to images folder.
+         
+       : Now to use this folder, we need to declare it as public in the jsp page where we want to add our resources.
+         We need to declare this in our configuration file which is Spring-servlet.xml. To use this we need to add mvc
+         libraries first so that we can use the mvc tags.
+         
+         	xmlns:mvc="http://www.springframework.org/schema/mvc"
+            
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            
+        But first to use this tags, we need to enable the mv tag as well. And to declare the resources -
+        
+        <mvc:annotation-driven/>
+	    <mvc:resources location="/WEB-INF/resources/" mapping="/resources/**" />   
+	    
+	   : Now we use jstl tag as well so that we can give our url location of the css or js file to the xml. 
+	     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	     
+	     And to give the location:
+	     <link href="<c:url value="/resources/css/style.css" />">	
+         <script src="<c:url value="/resources/js/script.js" />"></script>
+	      
+       
+                           						
+	     
+	   
+	   
+	   
+	                          
+								
+								
+							      
+    
+     
+        
+        
+            
+           
+            
+       
+    
+     	
+	
+     

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+		<bean class="com.springCore.P1Collections.Employee"
+		name="Employee1">
+		<property name="name" value="Himanshu Sharma" />
+
+		<property name="phones">
+		<!-- Can not use this list collection outside of the tag -->
+			<list>
+				<value>9650194028</value>
+				<value>9650194028</value>
+				<value>9650194028</value>
+			</list>
+		</property>
+
+		<property name="addresses">
+		<!-- Can not use this set collection outside of the tag -->
+			<set>
+				<value>Australia</value>
+				<value>Singaopore</value>
+				<value>Hawaii</value>
+			</set>
+		</property>
+
+		<property name="courses">
+		<!-- Can not use this map collection outside of the tag -->
+			<map>
+				<entry key="Full Stack" value="10 months" />
+				<entry key="Java Backend" value="3 months" />
+				<entry key="AWS Cloud" value="5 months" />
+
+			</map>
+		</property>
+
+	</bean>
+
+
+</beans>
+

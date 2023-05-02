@@ -1,0 +1,159 @@
+ Spring MVC with Spring ORM-
+
+ ** Creating an application of User Registration using MVC and ORM -
+ 
+ WorkFlow of the application: 
+ a. First the ContatController class will contact to the Service Layer(Service Class) and use it.
+ b. Second the service class will use the Database Layer(DAO Class) .
+ c. Lastly the DAO class will connect to the database and will store our data.
+ d. In last stage, we will write our Entity Class(User.java in this case) . 
+ 
+ 
+ Steps -
+ 1. First we need the dependencies like Spring orm, spring hibernate and mysql connector in pom.xml to use the ORM.
+ 
+ 2. We will use HibernateTemp object in USerDao(New package with UserDao class) to perform all the operations with ORM. 
+    To use this object , we will simply use @Autowired anno and the spring container will automatically create the 
+    object at runtime. We just need to defined its bean.
+    
+ 3. Need to create the Entity Class by simply using Entity annotation on User class.
+ 
+ 4. Now only UserService class is left to create in another service package. This class will use the UserDao method 
+    by using its object with @Autowired annotation to save the user data when createUser() method will call. This class 
+    is basically responsible for implementing methods like creating the user, deleting the user typically same as 
+    UserDao class.
+    
+ 5. Next to store the data , we need our ContactController class to use the UserService object(@Autowired) and simply 
+    call the createUser() method whenever the proccessForm() method is called means after entering the details of the
+    users.   
+    
+                        (Data Base Layer)              (Service Layer)               (Bussiness Logic Layer)
+    Entity       ---->    UserDao Class      ---->    UserService Class   ---->   ContactController will finally
+  (User Class)         will saveUser detail            will create user           use userService object whenever 
+                         with user object             with userdao object          the details has been filled by user
+                         
+                         
+ 6. Normally the @Component Annotation is used where the to tell which class requires the dependencies and where it needs 
+    to be inject but here in the case of Service Layer ,@Service annotation will use that works exactly as the @Component.
+    Similarly for Database Layer , @Repository annotation is used to tell that this class object should be inject in
+    some other class and it also needs some dependencies(with @Autowired) to work.
+  
+ 7. Lastly to make the configuration , every layer in this case is present in springmvc package so in Spring-servlet.xml
+    we can simply change the base package from springmvc/contrller to springmvc. That means the container will check
+    the package springmvc and its subpackages like Dao ,Model ,Service and Controller as well to configure the beans.
+    
+    Now the only bean that needs to be declared is HibernateTemplate otherwise every other class has been configure 
+    with annotation to tell the spring container. Hence simply declared its bean in xml file.
+    To declare the HibernateTemplate bean, we need LocalSessionBeanFactory Bean first and to use LocalSessionBeanFactory
+    we need DataSoruce bean. Therefore declaring all of them . Finally to enable the transaction , we also need the 
+    tag and bean. And Also use @Transactional Bean to the method present in the UserDao class.
+    
+    @Transactional
+	public int saveUser(User user) {
+		Integer id= (Integer) this.hiberTemp.save(user);
+		return id;
+	}
+    
+    <!-- Annotation tag to enable the transaction -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+     <!-- Bean class of TransactionManager so that we can write into the db directly from the program -->
+     <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" name="transactionManager" p:sessionFactory-ref="factory"/>
+  
+  8. To use this HibernateBean , we need to have the LocalsessionBean factory bean as well. To get this, we can use it directly from ORMConfig.xml
+     
+      <!-- Bean class of LocalSessionFactoryBean. This bean uses three properties to work - datasource obj, Hibernate properties
+	and annotated classes if more than one is present --> 
+	     
+	 <bean class=" org.springframework.orm.hibernate5.LocalSessionFactoryBean" name="factory">
+	 <property name="dataSource" ref="dataSource"></property>    <!-- 1. Datasource Object -->
+	 <property name="hibernateProperties">                       <!-- 2. Hibernate Properties -->
+	 <props>
+	 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
+	 <prop key="hibernate.show_sql">true</prop>
+	 <prop key="hibernate.hbm2ddl.auto">update</prop>    <!-- To create the table once -->
+	 </props>
+	 </property>
+	 <property name="annotatedClasses">                          <!-- 3. Annotated classes -->
+	 <list>
+	 <value>
+	        springmvc.Model.User
+	 </value>
+	 </list>
+	 </property>
+	 </bean> 
+	 
+	  Here the annotatedClass will be different than the ormconfig i.e we need to write the entity class according to our 
+	  project which is (springmvc.Model.User).
+	  
+  9. Now the final step is get the beans of Datasoruce which is required by HibernateTemp.
+    
+     <!-- Bean class of DataSource -->
+  	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="dataSource" 
+	      p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/springjdbc"
+	      p:username="root" p:password="root"/> 
+	      
+  ** Redirecting in MVC -
+     It is a process of redirecting(view pages) of one handler method with the help of another handler method. 
+     This can be done in two ways.
+     
+    a. Redirect prefix / Redirect URL - 
+    Example- 
+            
+    @RequestMapping(path = "/one")
+	public String first() {
+		System.out.println("This is hit be one url");
+		return "redirect:/two";
+	}
+
+	@RequestMapping(path= "/two")
+	public String second() {
+		System.out.println("This is hit be second url");
+		return "";
+	}
+     	       
+     	   This means when the user hits the url of one from their end first() handler method will run first , and then 
+     	   one will redirect to second handler method which is "/two" and second method will run.
+     	       
+     	       	   
+	b. By using redirectView name as the return type.
+	Example- 
+	@RequestMapping(path= "/two")
+	public RedirectView second() {
+		System.out.println("This is hit be second url");
+		RedirectView redirectView = new RedirectView();
+		redirectView.setUrl("contact");
+		return redirectView;
+	}
+	
+      Here RedirectView object will be used to redirect the url, after creating the oject of it and assigning the
+      url with redirectView.setUrl("contact") , we can redirect this url to any url we want like google.com etc.
+      
+	  When url "/one" hit, it will redirect to "/two" and then second() handler method will run which will redirect to
+	  the contact view.
+	  
+	  
+	Advantage of Redirecting - The main advantage of using redirecting is that if the user forgot to add some options
+	like username in the contact form or anything and enter submit, then the page will redirect itself. Means it helps
+	us to do the authentication.
+	
+	     if(user.getUserName().isBlank()){
+			System.out.println("You forgot to add Username, please enter it.");
+			return "redirect:/contact";
+			}   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                         

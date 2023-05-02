@@ -1,0 +1,131 @@
+ Normal way to inserting data to db---------------
+ 
+ mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| onlineshopping     |
+| test               |
++--------------------+
+4 rows in set (0.04 sec)
+
+mysql> create database springjdbc;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| onlineshopping     |
+| springjdbc         |
+| test               |
++--------------------+
+5 rows in set (0.04 sec)
+
+mysql> use springjdbc;
+Database changed
+mysql> create table student(Id int primary key, name varchar(100) not null, city varchar(200) );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_springjdbc |
++----------------------+
+| student              |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into student(Id,name,city) values(1,"Himanshu Sharma","Ghaziabad");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from student;
++----+-----------------+-----------+
+| Id | name            | city      |
++----+-----------------+-----------+
+|  1 | Himanshu Sharma | Ghaziabad |
++----+-----------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> desc student
+   -> \c
+mysql> desc student;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| Id    | int(11)      | NO   | PRI | NULL    |       |
+| name  | varchar(100) | NO   |     | NULL    |       |
+| city  | varchar(200) | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+3 rows in set (0.05 sec)
+
+----------------------------------------------------------------------------------------
+
+ Steps to do the JDBC connection--
+ 
+ a.  First we need to create the dataSource object and its bean.
+     Then we need to have the info of jdbcTemplate class in which we will inject the dataSource object through autowiring.
+     
+ b. Create the Dao interface-
+     Here in this interface , all the methods required to perform the operation to the db will be note down.
+     All the methods present here will be abstract with no body like insertion, update, delete, create methods;
+     These methods will take the student parameter and then will perform the operations.    
+     
+ c. Create the implementation class for the DAO interface.
+      This implementation class will have the implementation of the methods written in the interface StudentDao.
+      And this impl class will required to jdbcTemplate object for the operation which means this class has a dependency
+      of JdbcTemplate Class which we need to configure in our config file.
+      
+ d. Create the config file and provide all the bean and its detail using the spring jdbc.
+    <!-- DriverManagerDataSoruce Class which implements DataSource Interface 
+	     and here we will define its properties -->
+	<!-- Sometimes passing the url, we can get error like no database is selected , so to simply resolve it
+	     add the database name after the port example - "jdbc:mysql://localhost:3306/springjdbc"-->  
+	       
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="dataSource" 
+	      p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/springjdbc"
+	      p:username="root" p:password="root"/> 
+	
+	<!-- Here we need the JdbcTemplate Class metadata(class name & reference name) to get the dataSource object to perform DB operations -->
+	<bean class= "org.springframework.jdbc.core.JdbcTemplate" name="jdbcTemplate" p:dataSource-ref="dataSource"/>   
+	
+    <!-- Here we need to pass the above JdbcTemplate class object as an reference in the StudentDaoImpl -->
+	<bean class= "com.springJDBC.P1.DAO.StudentDaoImpl" name="impl" p:jdbcTemplate-ref="jdbcTemplate"/>	 
+	
+ e. Next creating the Row Mapper interface to select the single and multiple objects using spring jdbc.
+    --Getting the single object with studentId
+   	Student student2 = s1Enrty.getStudent(10);
+	Student student2 = s1Enrty.getStudent(1);
+	System.out.println(student2);
+		
+    -- Getting the multiple objects 
+ 	List<Student> students = s1Enrty.getAllStudents(); 
+	System.out.println(students);
+		
+ 
+ f. Doing the same operation without using the config file.
+  1. First create the configuration class. JdbcConfig where we have configured all the details of the bean with their methods.
+  
+  2. With the help of this configuration class, we don't need to use xml file anymore.
+     -Doing the same operations with the help of annotations @Configuration and @Bean
+     -With this , we need to create a bean methods for DataSource, JdbcTemplate and StduentDaoImpl class which are defined
+      in the P1Config.xml file
+     -After this we will use the AnnotationConfigApplicationContext to get the bean.  
+     
+     ApplicationContext context= new AnnotationConfigApplicationContext(JdbcConfig.class);
+		StudentDaoImpl s1Enrty = context.getBean("impl",StudentDaoImpl.class);
+		List<Student> students = s1Enrty.getAllStudents(); 
+		System.out.println(students);
+ 	
+ g. Using autowiring using annotations- It will reduce the code length much less than before.
+  1. First we just need to use @Componenet into StudentDaoImpl class and will use @Autowired on JdbcTemplate object/property or even
+     on its setter method. Both option will do the work.
+     
+  2. To tell the container the required package where our StudentDaoImpl will be present, we will use @ComponentScan annotation
+     in our JdbcConfig class. 	
+	 
+        
+

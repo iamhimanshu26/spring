@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- Bean for Address class 
+	<bean class= "com.springCore.P6Autowiring.ByXML.Address" name="address" p:city="Ghaziabad" p:street="E-Block, Nand Gram"/>
+	<bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp" autowire="byName" />
+	-->
+	
+	
+    <!-- Bean for Employee class -->
+    <!-- When the container create the object of employee, it will check the field present by its name like address 
+    of Type Address(Class) and then it will inject the dependency of address(in this case) into Employee Object
+    and will print the value with toString() method.The field name and the name present in the config file should be same.
+    (Private Address address) address = name="address" -->
+    <!-- <bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp1" autowire="byName" /> -->
+    
+    
+    <!-- Autowiring with the byType -->
+       <!-- Autowiring through ByType, we can change the name of the bean to the field , and still it will inject the object\
+       even the names are different. This is will inject the dependency by checking the Type of the bean written here and will
+       check it with the field present in the class. 
+           <bean class= "com.springCore.P6Autowiring.ByXML.Address" name="address1" p:city="Ghaziabad" p:street="C-Block, Nand Gram"/>
+       <bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp1" autowire="byType" /> 
+        --> 
+       
+       
+        
+        <!-- Autowiring with constructor
+         -->
+                  <bean class= "com.springCore.P6Autowiring.ByXML.Address" name="address" p:city="Ghaziabad" p:street="D-Block, Nand Gram"/>
+       <bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp2" autowire="constructor" /> 
+       
+    
+	
+</beans>
+

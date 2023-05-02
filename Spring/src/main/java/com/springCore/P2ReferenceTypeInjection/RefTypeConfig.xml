@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- com.springCore.P2ReferenceTypeInjection -->
+	<!-- /SpringCore/src/main/java/com/springCore/P2ReferenceTypeInjection/BClass.java -->
+	<bean class="com.springCore.P2ReferenceTypeInjection.BClass"
+		name="Bref">
+		<property name="y" value="10" />
+	</bean>
+
+	<!-- /SpringCore/src/main/java/com/springCore/P2ReferenceTypeInjection/AClass.java -->
+	
+	<!-- Using as an element or tag
+	 <bean class="com.springCore.P2ReferenceTypeInjection.AClass"
+		name="Aref">
+		<property name="x" value="12" />
+		<property name="bObject">
+			<ref bean="Bref" />
+		</property>
+	</bean>
+	 -->
+	
+	
+	<!-- By using as an attribute 
+	<bean class="com.springCore.P2ReferenceTypeInjection.AClass" name="Aref">
+	<property name="x" value="13"/>
+	<property name="bObject" ref="Bref"/>
+	</bean>
+	-->
+	
+	<!-- By using p schema method -->
+	<bean class="com.springCore.P2ReferenceTypeInjection.AClass" name= "Aref" p:x="15" p:bObject-ref="Bref"/>
+
+</beans>
+

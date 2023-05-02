@@ -1,0 +1,68 @@
+ Spring ORM - Spring Framework + ORM(Object Relational Mapping) tools like Hibernate , Toplinks etc.
+ 
+ Add the spring-orm and hibernate core dependency in pom.xml.
+  <!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <version>5.3.18</version>
+   </dependency>
+   
+   <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+   <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.4.32.Final</version>
+   </dependency> 
+ 
+ Advantages of Spring ORM-
+ 1. Less coding , since we will use the HibernateTemplate object to perform all the operations with its methods.
+ 2. Easy to test.
+ 3. Better exception handling.
+ 4. Integrated transaction management.
+ 
+ How ORM works ------------------------------
+ 
+  ORM will map the class field name values to the table present in the database with the same name columns
+  Ex- 
+  Java Program-                                                        Database
+  Class Student {                                                    Table Student-
+    private int Id;                                                |  Id  | name      |
+    private String name;                                           |  1   | Himanshu  | 
+  }                                                                |  2   | Rohan     |
+  
+  Names of the field/properties of Student Class is same as Student Table columns- Id & name
+  ORM will directly mapped the values b/w them and will give the container its object which the container will show us.
+  
+  Steps to work with Spring ORM ------------------
+  
+  a. First we need to create the Dao Class like StudentDao, EmployeeDao etc which will have all the methods to perform operations.
+  
+  b. Then will use the HibernateTemplate class object in Dao class and HibernateTemplate depends upon SessionFactory Interface.
+  
+  c. Since SessionFactory is an Interface , we can not create its object directly to use in DAO class i.e will use its
+     implementation class called LocalSessionFactoryBean. 
+     
+  d. We will first provide the object of LocalSessionFactoryBean to HibernateTemplate class and then lastly will inject
+     the object of HibernateTemplate into DAO class.
+     
+  e. In order to create the LocalSessionFactoryBean object , we first need to provide three things to this class.
+     - DataSource object with (Database Properties- url, pw, name).
+     - Hibernate Properties like selection of dialect.
+     - AnnotatedClass means Entity class.
+     
+						        Obj of                       Obj of
+						 LocalSessionFactoryBean ----> HibernateTemplate ----> Dao Class(Will finally perform 
+						                                                                    all the operations)
+						     
+  f. Lastly we need the HibernateTransactionManager bean to make our code writable otherwise it will only make the code
+     readable. To do this, first use the @Transactional annotation to the method present in DAO layer and then create the
+     bean of this class in config file.
+     We need to enable it as well within the config file with declaring the schema and annotation tag.
+     Schema - xmlns:tx="http://www.springframework.org/schema/tx"
+              http://www.springframework.org/schema/tx
+              http://www.springframework.org/schema/tx/spring-tx.xsd  
+              
+     Annotation tag- <!-- Annotation tag to enable the transaction -->
+                     <tx:annotation-driven/>         
+     

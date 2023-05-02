@@ -1,0 +1,82 @@
+ Autowiring - Before this , we are manually wiring or injecting the dependencies or bean into the other class either by using the name,
+              the name, or even the p:ref-bean=" " tag for the one object to another object.
+              Therefore injecting/wiring one object/dependency into another object of a class automatically is called Autowiring.
+              Autowiring can't be used for primitive and string values.
+
+ We can do the autowiring in two ways-
+ 
+ ------ By using XML-----
+ 
+  By using XML file with the help of Autowiring modes which by default is disabled.
+   In this , we can autowire the dependency either byName of the bean/dependency or byType of the bean.
+   
+   1- ByName-
+   
+   <!-- Bean for Address class -->
+	<bean class= "com.springCore.P6Autowiring.ByXML.Address" name="address" p:city="Ghaziabad" p:street="E-Block, Nand Gram"/>
+	
+    <!-- Bean for Employee class -->
+    <!-- When the container create the object of employee, it will check the field present by its name like address 
+    of Type Address(Class) and then it will inject the dependency of address(in this case) into Employee Object
+    and will print the value with toString() method.The field name and the name present in the config file should be same.
+    (Private Address address) address = name="address" -->
+    <!-- <bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp1" autowire="byName" /> -->
+    
+    2- ByType-
+    
+       <!-- Autowiring with the byType -->
+       <!-- Autowiring through ByType, we can change the name of the bean to the field , and still it will inject the object\
+       even the names are different. This is will inject the dependency by checking the Type of the bean written here and will
+       check it with the field present in the class. 
+       
+       <bean class= "com.springCore.P6Autowiring.ByXML.Address" name="address" p:city="Ghaziabad" p:street="E-Block, Nand Gram"/>
+       <bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp1" autowire="byType" />
+    
+    3- We can do autowire by using constructor mode-
+    <bean class= "com.springCore.P6Autowiring.ByXML.Employee" name="Emp1" autowire="constructor" />  
+  
+   4- By using autodetect mode- Automatically enable in the config.
+  
+  
+ ----- By using Annotation-----
+ Secondly we can simply use @Autowired annotation to the -
+ 
+ 1- Class Field/Property - In this we do not need to add the autowire in the XmL file , just adding the @Autowired annotation
+ to the Address object of Employee class will do the work. 
+ 
+    @Autowired
+	private Address address;
+	
+ But we need to enable the annotation in config by using 
+    <!-- To enable to autowired annotation -->
+    <context:annotation-config/>
+ By default, in this the injection is getting with byType injection. Doesn't matter if the names of the object and bean are same or not.
+ 	
+ Example -
+    <bean class="com.springCore.P6Autowiring.ByAnnotation.Address" name="address1" p:city="Noida" p:street="Sector 144"/>
+    <bean class="com.springCore.P6Autowiring.ByAnnotation.Address" name="address2" p:city="Noida" p:street="Sector 144"/>
+    <bean class="com.springCore.P6Autowiring.ByAnnotation.Address" name="address3" p:city="Noida" p:street="Sector 144"/>
+ 
+    <bean class= "com.springCore.P6Autowiring.ByAnnotation.Employee" name="Emp1"/>
+ 
+ 2- Setter methods - Putting the @Autowired annotation to the setter method.
+    @Autowired
+	public void setAddress(Address address) {
+		System.out.println("Injecting object through byType only with @Autowired");
+		this.address = address;
+	}
+ 
+ 3- Constructor - Putting the @Autowired annotation to the constructor method.
+    @Autowired
+	public Employee(Address address) {
+		super();
+		System.out.println("Injecting object through constructor only with  @Autowired ");
+		this.address = address;
+	}
+ 
+ 
+ 
+ 
+ 
+ 
+ 

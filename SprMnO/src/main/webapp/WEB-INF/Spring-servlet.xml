@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+    <!-- To enable the annotation -->
+	<context:component-scan base-package="springmvc.Controller" />
+    
+    	<!-- Configuring the viewResolver with the help of bean tag class name can 
+		be found with ctrl+shift+t and search InternalResourceViewResolver -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		name="viewResolver">
+
+		<!-- This prefix property defines how the pages will start from the front. -->
+		<property name="prefix" value="/WEB-INF/views/" />
+
+		<!-- This suffix property of viewResolver defines how the page will end -->
+		<property name="suffix" value=".jsp" />
+
+		<!-- Example - /WEB-INF/views/hello.jsp , where hello is the name of the 
+			view and will be given to us by Controller with step 4. -->
+	</bean>
+
+</beans>
+
